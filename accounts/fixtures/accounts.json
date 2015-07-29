@@ -1,0 +1,146 @@
+[
+{
+    "fields": {
+        "account_type_en": "BUYER",
+        "mapping_code": "10",
+        "account_type_cn": "\u4e70\u5bb6\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 1
+},
+{
+    "fields": {
+        "account_type_en": "SELLER",
+        "mapping_code": "11",
+        "account_type_cn": "\u5356\u5bb6\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 2
+},
+{
+    "fields": {
+        "account_type_en": "INTERMEDIARY",
+        "mapping_code": "51",
+        "account_type_cn": "\u5e73\u53f0\u4e2d\u95f4\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 3
+},
+{
+    "fields": {
+        "account_type_en": "COST",
+        "mapping_code": "52",
+        "account_type_cn": "\u5e73\u53f0\u6210\u672c\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 4
+},
+{
+    "fields": {
+        "account_type_en": "GUARANTEE",
+        "mapping_code": "53",
+        "account_type_cn": "\u5e73\u53f0\u62c5\u4fdd\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 5
+},
+{
+    "fields": {
+        "account_type_en": "INCOME",
+        "mapping_code": "54",
+        "account_type_cn": "\u5e73\u53f0\u6536\u5165\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 6
+},
+{
+    "fields": {
+        "account_type_en": "FROZENFUND",
+        "mapping_code": "55",
+        "account_type_cn": "\u5e73\u53f0\u51bb\u7ed3\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 7
+},
+{
+    "fields": {
+        "account_type_en": "GIFT",
+        "mapping_code": "56",
+        "account_type_cn": "\u5e73\u53f0\u8d60\u9001\u8d26\u6237"
+    },
+    "model": "accounts.accounttype",
+    "pk": 8
+},
+{
+    "fields": {
+        "sys_code_en": "LIVE",
+        "sys_code_cn": "\u53c8\u4e00\u8bfe\u76f4\u64ad",
+        "mapping_code": "01"
+    },
+    "model": "accounts.systemcode",
+    "pk": 1
+},
+{
+    "fields": {
+        "sys_code_en": "CROWDFUND",
+        "sys_code_cn": "\u53c8\u4e00\u8bfe\u4f17\u7b79",
+        "mapping_code": "02"
+    },
+    "model": "accounts.systemcode",
+    "pk": 2
+},
+{
+    "fields": {
+        "sys_code_en": "PLATFORM",
+        "sys_code_cn": "\u5927\u5e73\u53f0\u7535\u5546",
+        "mapping_code": "03"
+    },
+    "model": "accounts.systemcode",
+    "pk": 3
+},
+{
+    "fields": {
+        "sys_code_en": "AUDIO",
+        "sys_code_cn": "\u97f3\u9891\u9879\u76ee",
+        "mapping_code": "04"
+    },
+    "model": "accounts.systemcode",
+    "pk": 4
+},
+{
+    "fields": {
+        "device_type_cn": "\u8de8\u8bbe\u5907\u7c7b\u578b",
+        "mapping_code": "00",
+        "device_type_en": "ALL"
+    },
+    "model": "accounts.devicetype",
+    "pk": 1
+},
+{
+    "fields": {
+        "device_type_cn": "\u5b89\u5353\u8bbe\u5907",
+        "mapping_code": "01",
+        "device_type_en": "ANDROID"
+    },
+    "model": "accounts.devicetype",
+    "pk": 2
+},
+{
+    "fields": {
+        "device_type_cn": "\u82f9\u679c\u8bbe\u5907",
+        "mapping_code": "02",
+        "device_type_en": "IOS"
+    },
+    "model": "accounts.devicetype",
+    "pk": 3
+},
+{
+    "fields": {
+        "device_type_cn": "\u7f51\u9875",
+        "mapping_code": "03",
+        "device_type_en": "WEB"
+    },
+    "model": "accounts.devicetype",
+    "pk": 4
+}
+]
