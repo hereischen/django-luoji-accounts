@@ -1,3 +1,6 @@
+CHANGES.rst
+MANIFEST.in
+README.md
 setup.py
 accounts/__init__.py
 accounts/admin.py
