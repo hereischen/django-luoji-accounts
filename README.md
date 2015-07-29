@@ -9,6 +9,12 @@ django-luoji-accounts adds a number of indispensible financial account-related c
 
 * Sub Account
 
+* AccountType
+
+* SystemCode
+
+* DeviceType
+
 * Transfer
 
 * Transaction 
@@ -45,7 +51,8 @@ urlpatterns = patterns(
 )
 ```
 
-To customise for your speacific usage, use a wrapper class in your project, for example:
+To customise for your specific usage, create a wrapper in your project, for example, project/account_wrapper.py, it would be:
+
 ```python
 from accounts.models import GeneralAccountManager
 
@@ -55,6 +62,9 @@ class AudioAccountManager(GeneralAccountManager):
     音频账户管理类
     """
     def _get_or_create_sub_account_for_jcc(self, user_id, account_type, device_type):
+        """
+        查询或创建
+        """
         return self.get_or_create_sub_account(user_id=user_id,
                                               account_type=account_type,
                                               sys_code='AUDIO',
@@ -62,8 +72,61 @@ class AudioAccountManager(GeneralAccountManager):
                                               currency='JCC'
                                               )
 
+    def _get_sub_account_for_jcc(self, user_id, account_type, device_type):
+        """
+        查询
+        """
+        return self.get_sub_account(user_id=user_id,
+                                    account_type=account_type,
+                                    sys_code='AUDIO',
+                                    device_type=device_type,
+                                    currency='JCC'
+                                    )
+
     def get_or_create_buyer_account_for_android(self, user_id):
         return self._get_or_create_sub_account_for_jcc(user_id,'BUYER', 'ANDROID')
+
+    def get_or_create_cost_account_for_android(self):
+        return self._get_or_create_sub_account_for_jcc('9999', 'COST', 'ANDROID')
+
+
+    def get_buyer_account_for_android(self, user_id):
+        return self._get_sub_account_for_jcc(user_id, 'BUYER', 'ANDROID')
+
+    def get_cost_account_for_android(self):
+        return self._get_sub_account_for_jcc('9999', 'COST', 'ANDROID')
+
 ```
+
+To call the methods :
+
+```python
+# import required models e.g.. Account, SubAccount
+
+# import your wrapper e.g. from project/account_wrapper.py
+from project.account_wrapper import AudioAccountManager
+
+# query or create an android buyer account 查询或创建安卓买家
+# return one if it exists
+# create and return one if it does not exist
+ba = AudioAccountManager().get_or_create_buyer_account_for_android(
+    '100010')
+
+# query an android buyer account 查询安卓买家
+# return one if it exists
+# arise exceptions if one does not exist
+ba2 = AudioAccountManager().get_buyer_account_for_android(
+    '100010')
+
+# query or create an android cost account  查询或创建安卓赠送账户
+ga = AudioAccountManager().get_or_create_cost_account_for_android()
+
+
+# query an android cost account 查询安卓赠送账户
+ga2 = AudioAccountManager().get_cost_account_for_android()
+
+
+```
+
 
 That's it!

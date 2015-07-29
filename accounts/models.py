@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import logging
 from decimal import Decimal as D
 
@@ -21,216 +22,18 @@ CURRENCY = (
 )
 
 
-# def _get_account_for_platform_jcc(user_id, account_type, device_type):
-#     """
-#     平台 节操币
-#     """
-#     return _get_or_create_sub_account(user_id=user_id,
-#                                       account_type=account_type,
-#                                       sys_code='PLATFORM',
-#                                       device_type=device_type,
-#                                       currency='JCC'
-#                                       )
-
-
-# def _get_account_for_platform_cny(user_id, account_type, device_type):
-#     """
-#     平台 人民币
-#     """
-#     return _get_or_create_sub_account(user_id=user_id,
-#                                       account_type=account_type,
-#                                       sys_code='PLATFORM',
-#                                       device_type=device_type,
-#                                       currency='CNY'
-#                                       )
-
-
-# def _get_account_for_audio_jcc(user_id, account_type, device_type):
-#     """
-#     音频 节操币
-#     """
-#     return _get_or_create_sub_account(user_id=user_id,
-#                                       account_type=account_type,
-#                                       sys_code='AUDIO',
-#                                       device_type=device_type,
-#                                       currency='JCC'
-#                                       )
-
-
-# # =============== 买家 音频 jcc======================
-# def get_buyer_account_for_audio_android_jcc(user_id):
-#     return _get_account_for_audio_jcc(user_id, 'BUYER', 'ANDROID')
-
-
-# def get_buyer_account_for_audio_ios_jcc(user_id):
-#     return _get_account_for_audio_jcc(user_id, 'BUYER', 'IOS')
-
-
-# # =============== 卖家 音频 jcc======================
-# def get_seller_account_for_audio_android_jcc(user_id):
-#     return _get_account_for_audio_jcc(user_id, 'SELLER', 'ANDROID')
-
-
-# def get_seller_account_for_audio_ios_jcc(user_id):
-#     return _get_account_for_audio_jcc(user_id, 'SELLER', 'IOS')
-
-
-# # =============== 中间账户 音频 jcc======================
-# def get_intermediary_account_for_audio_android_jcc():
-#     return _get_account_for_audio_jcc('9999', 'INTERMEDIARY', 'ANDROID')
-
-
-# def get_intermediary_account_for_audio_ios_jcc():
-#     return _get_account_for_audio_jcc('9999', 'INTERMEDIARY', 'IOS')
-
-
-# # =============== 成本账户 音频 jcc======================
-# def get_cost_account_for_audio_android_jcc():
-#     return _get_account_for_audio_jcc('9999', 'COST', 'ANDROID')
-
-
-# def get_cost_account_for_audio_ios_jcc():
-#     return _get_account_for_audio_jcc('9999', 'COST', 'IOS')
-
-
-# # =============== 担保账户 音频 jcc======================
-# def get_guarantee_account_for_audio_android_jcc():
-#     return _get_account_for_audio_jcc('9999', 'GUARANTEE', 'ANDROID')
-
-
-# def get_guarantee_account_for_audio_ios_jcc():
-#     return _get_account_for_audio_jcc('9999', 'GUARANTEE', 'IOS')
-
-
-# # =============== 收入账户 音频 jcc======================
-# def get_income_account_for_audio_android_jcc():
-#     return _get_account_for_audio_jcc('9999', 'INCOME', 'ANDROID')
-
-
-# def get_income_account_for_audio_ios_jcc():
-#     return _get_account_for_audio_jcc('9999', 'INCOME', 'IOS')
-
-
-# # =============== 冻结账户 音频 jcc======================
-# def get_fronzenfund_account_for_audio_android_jcc():
-#     return _get_account_for_audio_jcc('9999', 'FROZENFUND', 'ANDROID')
-
-
-# def get_fronzenfund_account_for_audio_ios_jcc():
-#     return _get_account_for_audio_jcc('9999', 'FROZENFUND', 'IOS')
-
-
-# # =============== 赠送账户 音频 jcc======================
-# def get_gift_account_for_audio_android_jcc():
-#     return _get_account_for_audio_jcc('9999', 'GIFT', 'ANDROID')
-
-
-# def get_gift_account_for_audio_ios_jcc():
-#     return _get_account_for_audio_jcc('9999', 'GIFT', 'IOS')
-
-
-# def _generate_account_number(user_id, account_type,
-#                              sys_code, device_type):
-#     """
-#     生成accoun_number,目前根据时间戳
-#     """
-#     # 账户类型编码
-#     account_code = AccountType.objects.get(
-#         account_type_en=account_type).mapping_code
-#     # 系统类型编码
-#     system_code = SystemCode.objects.get(
-#         sys_code_en=sys_code).mapping_code
-#     # 设备类型编码
-#     device_code = DeviceType.objects.get(
-#         device_type_en=device_type).mapping_code
-
-#     # 总账户 账户号
-#     account_number = account_code + user_id
-
-#     # 子账户 账户号
-#     sub_account_number = account_code + system_code + device_code + user_id
-
-#     return account_number, sub_account_number
-
-
-# def _is_account_exist(account_number):
-#     return Account.objects.filter(account_number=account_number)
-
-
-# def _create_account(user_id, account_type,
-#                     sys_code, device_type):
-
-#     account_number = _generate_account_number(user_id=user_id,
-#                                               account_type=account_type,
-#                                               sys_code=sys_code,
-#                                               device_type=device_type)[0]
-
-#     account = Account.objects.create(account_number=account_number,
-#                                      sub_account_quantity=1,
-#                                      )
-#     account.save()
-#     logger.info('Create account >> %s.' % account)
-
-#     return account
-
-
-# def _get_or_create_sub_account(user_id, account_type,
-#                                sys_code, device_type, currency):
-
-#     account_number, sub_account_number = _generate_account_number(user_id=user_id,
-#                                                                   account_type=account_type,
-#                                                                   sys_code=sys_code,
-#                                                                   device_type=device_type)
-
-#     if not _is_account_exist(account_number):
-#         # 创建一个新的总账户,并使sub_account_quantity为1
-#         account = _create_account(user_id=user_id, account_type=account_type,
-#                                   sys_code=sys_code, device_type=device_type)
-
-#         # 子账户
-#         sub_account, flg = SubAccount.objects.get_or_create(account_number=sub_account_number,
-#                                                             currency=currency,
-#                                                             account=account
-#                                                             )
-
-#         if flg:
-#             # sub_account.save()
-#             logger.info('Create sub account >> %s.' % sub_account)
-#         else:
-#             logger.info('Get sub account >> %s.' % sub_account)
-
-#         return sub_account
-
-#     else:
-#         account = _is_account_exist(account_number)[0]
-
-#         # 子账户
-#         sub_account, flg = SubAccount.objects.get_or_create(account_number=sub_account_number,
-#                                                             currency=currency,
-#                                                             account=account
-#                                                             )
-
-#         # 创建子账户时,总账户的子账户数+1
-#         if flg:
-#             # sub_account.save()
-#             logger.info('Create sub account >> %s.' % sub_account)
-#             account.sub_account_quantity += 1
-#             account.save()
-#             logger.info('Update account >> %s.' % account)
-#         else:
-#             logger.info('Get sub account >> %s.' % sub_account)
-
-#         return sub_account
-
-
-# ================================================================
-# ================================================================
-
 class GeneralAccountManager(object):
 
     """
     项目账户管理通用类
     """
+
+    def _validate_user_id(self, user_id):
+        regex = r'^[0-9]{9}$'
+        if user_id != '9999':
+            if not re.match(regex, user_id):
+                raise ValueError(
+                    "Invalid user id [%s]. User id must be 9 digits long." % user_id)
 
     def _generate_account_number(self, user_id, account_type,
                                  sys_code, device_type):
@@ -248,6 +51,8 @@ class GeneralAccountManager(object):
         # 设备类型编码
         device_code = DeviceType.objects.get(
             device_type_en=device_type).mapping_code
+
+        self._validate_user_id(user_id)
 
         # 总账户 账户号
         account_number = account_code + user_id
