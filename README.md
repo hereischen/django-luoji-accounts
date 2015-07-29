@@ -34,7 +34,7 @@ INSTALLED_APPS = (
 'accounts',
 ...
 )
-```python
+```
 Include the django-luoji-accounts URLs in your urls.py::
 
 ```python
