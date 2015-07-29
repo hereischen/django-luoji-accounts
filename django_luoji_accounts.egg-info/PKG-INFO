@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: django-luoji-accounts
-Version: 0.0.1
+Version: 0.0.3
 Summary: A general account app for projects.
 Home-page: https://github.com/hereischen/django-luoji-accounts
 Author: Haotong Chen
@@ -42,7 +42,7 @@ Description: # django-luoji-accounts
         'accounts',
         ...
         )
-        ```python
+        ```
         Include the django-luoji-accounts URLs in your urls.py::
         
         ```python
@@ -75,17 +75,6 @@ Description: # django-luoji-accounts
         ```
         
         That's it!
-        
-        Changelog
-        ==============================
-        
-        
-        0.0.1 - Jul.29, 2015
-        ------------------------------
-        
-        - Initail commit
-        
-        
 Platform: UNKNOWN
 Classifier: Environment :: Web Environment
 Classifier: Framework :: Django
