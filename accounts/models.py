@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
 from decimal import Decimal as D
 
@@ -28,19 +27,28 @@ class GeneralAccountManager(object):
     项目账户管理通用类
     """
 
-    def _validate_user_id(self, user_id):
-        regex = r'^[0-9]{9}$'
-        if user_id != '9999':
-            if not re.match(regex, user_id):
+    def _format_user_id(self, user_id):
+        # 用户id都是数字
+        if user_id.isdigit():
+            # 不能超过9位,不足9位,则首位补9,之后补0＋user_id 直到9位
+            if len(user_id) == 9:
+                return user_id
+            elif len(user_id) < 9:
+                user_id = '9' + '{0}'.format(user_id.zfill(8))
+                return user_id
+            else:
                 raise ValueError(
-                    "Invalid user id [%s]. User id must be 9 digits long." % user_id)
+                    "Invalid user id [%s]. User id must not exceed 9 digits." % user_id)
+        else:
+            raise ValueError(
+                "Invalid user id [%s]. User id must be all digits." % user_id)
 
     def _generate_account_number(self, user_id, account_type,
                                  sys_code, device_type):
         """
         生成account_number:
-        总账户 账户号 = 两位账户类型编码  + user id
-        子账户 账户号 = 两位账户类型编码 + 两位系统(项目)类型编码 + 两位设备类型编码 + user id
+        总账户 账户号 = 两位账户类型编码  + rf_user id
+        子账户 账户号 = 两位账户类型编码 + 两位系统(项目)类型编码 + 两位设备类型编码 + rf_user id
         """
         # 账户类型编码
         account_code = AccountType.objects.get(
@@ -52,13 +60,14 @@ class GeneralAccountManager(object):
         device_code = DeviceType.objects.get(
             device_type_en=device_type).mapping_code
 
-        self._validate_user_id(user_id)
+        rf_user_id = self._format_user_id(user_id)
 
         # 总账户 账户号
-        account_number = account_code + user_id
+        account_number = account_code + rf_user_id
 
         # 子账户 账户号
-        sub_account_number = account_code + system_code + device_code + user_id
+        sub_account_number = account_code + \
+            system_code + device_code + rf_user_id
 
         return account_number, sub_account_number
 
@@ -74,6 +83,7 @@ class GeneralAccountManager(object):
                                                        device_type=device_type)[0]
 
         account = Account.objects.create(account_number=account_number,
+                                         user_id=user_id,
                                          sub_account_quantity=1,
                                          )
         account.save()
@@ -96,6 +106,7 @@ class GeneralAccountManager(object):
 
             # 子账户
             sub_account, flg = SubAccount.objects.get_or_create(account_number=sub_account_number,
+                                                                user_id=user_id,
                                                                 currency=currency,
                                                                 account=account
                                                                 )
@@ -113,6 +124,7 @@ class GeneralAccountManager(object):
 
             # 子账户
             sub_account, flg = SubAccount.objects.get_or_create(account_number=sub_account_number,
+                                                                user_id=user_id,
                                                                 currency=currency,
                                                                 account=account
                                                                 )
@@ -139,12 +151,19 @@ class GeneralAccountManager(object):
 
         return SubAccount.objects.get(account_number=sub_account_number)
 
+    def _validate_merchant_account_user_id(self, user_id):
+        if user_id == '999999999':
+            raise ValueError(
+                "Invalid user id [%s] for merchant users. [99999999] is reserved " % user_id)
+
 
 class Account(models.Model):
     # 注意账户统一保留小数点后六位
     # 账户编号
     account_number = models.CharField(
         max_length=128, unique=True, help_text=u'总账户编号')
+
+    user_id = models.CharField(max_length=128, help_text=u'用户id')
 
     # 账户创建时间
     time_created = models.DateTimeField(auto_now_add=True, help_text=u'账户创建时间')
@@ -176,6 +195,8 @@ class Account(models.Model):
 class SubAccount(models.Model):
     account_number = models.CharField(
         max_length=169, unique=True, help_text=u'子账户编号')
+
+    user_id = models.CharField(max_length=128, help_text=u'用户id')
 
     # 账户创建时间
     time_created = models.DateTimeField(auto_now_add=True, help_text=u'账户创建时间')
