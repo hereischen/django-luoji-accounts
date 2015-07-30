@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: django-luoji-accounts
-Version: 0.0.6
+Version: 0.0.7
 Summary: A general account app for projects.
 Home-page: https://github.com/hereischen/django-luoji-accounts
 Author: Haotong Chen

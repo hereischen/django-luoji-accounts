@@ -9,9 +9,13 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-luoji-accounts',
-    version='0.0.6',
-    packages=['accounts'],
-    include_package_data=True,
+    version='0.0.7',
+    # packages=find_packages(),
+    packages=['accounts', 'accounts.migrations', 'accounts.fixtures'],
+    package_data={
+        '': ['*.json'],
+    },
+    # include_package_data=True,
     license='BSD License',
     description='A general account app for projects.',
     long_description=README,
