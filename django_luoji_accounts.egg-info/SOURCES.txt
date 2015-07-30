@@ -9,6 +9,13 @@ accounts/models.py
 accounts/tests.py
 accounts/urls.py
 accounts/views.py
+accounts/fixtures/__init__.py
+accounts/fixtures/accounts.json
+accounts/migrations/0001_initial.py
+accounts/migrations/0002_auto_20150727_0938.py
+accounts/migrations/0003_auto_20150727_1058.py
+accounts/migrations/0004_auto_20150730_0545.py
+accounts/migrations/__init__.py
 django_luoji_accounts.egg-info/PKG-INFO
 django_luoji_accounts.egg-info/SOURCES.txt
 django_luoji_accounts.egg-info/dependency_links.txt

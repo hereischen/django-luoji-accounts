@@ -1,6 +1,11 @@
 Changelog
 ==============================
 
+0.0.7 - Jul.30, 2015
+------------------------------
+- added fixtures package
+- added migrations package
+
 0.0.6 - Jul.30, 2015
 ------------------------------
 - bugs fixing
