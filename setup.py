@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-luoji-accounts',
-    version='0.0.8',
+    version='0.0.9',
     # packages=find_packages(),
     packages=['accounts', 'accounts.migrations', 'accounts.fixtures'],
     package_data={

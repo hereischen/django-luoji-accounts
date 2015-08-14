@@ -1,11 +1,13 @@
 Changelog
 ==============================
 
+0.0.9 - Aug.07, 2015
+------------------------------
+- added GenericForeignKey and ContentType in TransferManager
+
 0.0.8 - Aug.07, 2015
 ------------------------------
 - Changed AUDIO to IGET in fixtures
-
-
 
 0.0.7 - Jul.30, 2015
 ------------------------------

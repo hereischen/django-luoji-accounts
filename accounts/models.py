@@ -6,6 +6,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 logger = logging.getLogger(__name__)
 
@@ -313,7 +315,7 @@ class DeviceType(models.Model):
 
 class TransferManager(models.Manager):
 
-    def create_transfer(self, source, destination, amount, description=None):
+    def create_transfer(self, source, destination, amount, content_object, description=None):
         self.verify_transfer(source, destination, amount)
 
         logger.debug('From account [%s : %s] to account [%s : %s], transfer amount: [%s] %s.'
@@ -326,6 +328,7 @@ class TransferManager(models.Manager):
             destination=destination,
             amount=amount,
             description=description,
+            content_object=content_object,
             source_balance=D('0.000000'),
             destination_balance=D('0.000000'),
         )
@@ -388,6 +391,11 @@ class Transfer(models.Model):
 
     # 转账创建时间
     time_created = models.DateTimeField(auto_now_add=True)
+
+    # 建立与withdrawal和trade之间的关系
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     objects = TransferManager()
 
