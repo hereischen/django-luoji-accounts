@@ -16,17 +16,17 @@ class JCCAccountsTestCase(TestCase):
     def test_get_or_create_buyer_account_for_audio_ios(self):
         bi = IgetAccountManager().get_or_create_buyer_account_for_ios(
             '100010')
-        self.assertEquals(bi.account_number, '100402100010')
+        self.assertEquals(bi.account_number, '100402900100010')
 
     def test_get_or_create_seller_account_for_audio_android(self):
         sa = IgetAccountManager().get_or_create_seller_account_for_android(
             '100010')
-        self.assertEquals(sa.account_number, '110401100010')
+        self.assertEquals(sa.account_number, '110401900100010')
 
     def test_get_or_create_seller_account_for_audio_ios(self):
         si = IgetAccountManager().get_or_create_seller_account_for_ios(
             '100010')
-        self.assertEquals(si.account_number, '110402100010')
+        self.assertEquals(si.account_number, '110402900100010')
 
     def test_sub_account_quantity(self):
 
@@ -40,9 +40,9 @@ class JCCAccountsTestCase(TestCase):
             '100010')
 
         b_quantity = Account.objects.get(
-            account_number='10100010').sub_account_quantity
+            account_number='10900100010').sub_account_quantity
         a_quantity = Account.objects.get(
-            account_number='11100010').sub_account_quantity
+            account_number='11900100010').sub_account_quantity
 
         self.assertEquals(2, b_quantity)
         self.assertEquals(2, a_quantity)
@@ -131,5 +131,5 @@ class JCCAccountsTestCase(TestCase):
         ba = IgetAccountManager().get_buyer_account_for_android(
             '100010')
 
-        self.assertEquals(ba.account_number, '100401100010')
+        self.assertEquals(ba.account_number, '100401900100010')
         self.assertEquals(ba.balance, D('0.000000'))
