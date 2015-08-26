@@ -1,135 +1,72 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
-from accounts.models import Account
+from accounts.models import Account, GeneralAccountManager, Transfer, Transaction
 from decimal import Decimal as D
-from jccoin.account_wrapper import IgetAccountManager
-
 
 # Create your tests here.
-class JCCAccountsTestCase(TestCase):
+
+
+class AccountsTestCase(TestCase):
     fixtures = ['accounts.json']
 
-    def test_get_or_create_buyer_account_for_audio_android(self):
-        ba = IgetAccountManager().get_or_create_buyer_account_for_android(
-            '10001000')
-        self.assertEquals(ba.account_number, '100401910001000')
+    def test_create_and_get_sub_account(self):
+        # 大平台买家人民币全设备子账户
+        buyer = GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'PLATFORM', 'ALL', 'CNY')
+        self.assertEquals(buyer.account_number, '100300900010000')
 
-    def test_get_or_create_buyer_account_for_audio_ios(self):
-        bi = IgetAccountManager().get_or_create_buyer_account_for_ios(
-            '100010')
-        self.assertEquals(bi.account_number, '100402900100010')
-
-    def test_get_or_create_seller_account_for_audio_android(self):
-        sa = IgetAccountManager().get_or_create_seller_account_for_android(
-            '100010')
-        self.assertEquals(sa.account_number, '110401900100010')
-
-    def test_get_or_create_seller_account_for_audio_ios(self):
-        si = IgetAccountManager().get_or_create_seller_account_for_ios(
-            '100010')
-        self.assertEquals(si.account_number, '110402900100010')
+        a = GeneralAccountManager().get_sub_account(
+            '10000', 'BUYER', 'PLATFORM', 'ALL', 'CNY')
+        self.assertEquals(buyer, a)
 
     def test_sub_account_quantity(self):
-
-        IgetAccountManager().get_or_create_buyer_account_for_android(
-            '100010')
-        IgetAccountManager().get_or_create_buyer_account_for_ios(
-            '100010')
-        IgetAccountManager().get_or_create_seller_account_for_android(
-            '100010')
-        IgetAccountManager().get_or_create_seller_account_for_ios(
-            '100010')
-
-        b_quantity = Account.objects.get(
-            account_number='10900100010').sub_account_quantity
-        a_quantity = Account.objects.get(
-            account_number='11900100010').sub_account_quantity
-
-        self.assertEquals(2, b_quantity)
-        self.assertEquals(2, a_quantity)
-
-    def test_get_or_create_intermediary_account_for_audio(self):
-        ia = IgetAccountManager(
-        ).get_or_create_intermediary_account_for_android()
-        ii = IgetAccountManager(
-        ).get_or_create_intermediary_account_for_ios()
-        self.assertEquals(ia.account_number, '510401999999999')
-        self.assertEquals(ii.account_number, '510402999999999')
+        # 总账户号由 账户类型 和 用户ID 构成。
+        GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'PLATFORM', 'ALL', 'CNY')
+        GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'PLATFORM', 'WEB', 'JCC')
+        GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'IGET', 'ALL', 'CNY')
+        GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'IGET', 'IOS', 'CNY')
+        GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'LIVE', 'ANDROID', 'JCC')
 
         quantity = Account.objects.get(
-            account_number='51999999999').sub_account_quantity
+            account_number='10900010000').sub_account_quantity
 
-        self.assertEquals(quantity, 2)
+        self.assertEquals(quantity, 5)
 
-    def test_get_or_create_cost_account_for_audio(self):
-        ia = IgetAccountManager(
-        ).get_or_create_cost_account_for_android()
-        ii = IgetAccountManager(
-        ).get_or_create_cost_account_for_ios()
-        self.assertEquals(ia.account_number, '520401999999999')
-        self.assertEquals(ii.account_number, '520402999999999')
 
-        quantity = Account.objects.get(
-            account_number='52999999999').sub_account_quantity
+class TransferTestCase(TestCase):
+    fixtures = ['accounts.json']
 
-        self.assertEquals(quantity, 2)
+    def setUp(self):
+        self.buyer = GeneralAccountManager().get_or_create_sub_account(
+            '10000', 'BUYER', 'PLATFORM', 'ALL', 'CNY')
+        self.seller = GeneralAccountManager().get_or_create_sub_account(
+            '10001', 'SELLER', 'PLATFORM', 'ALL', 'CNY')
 
-    def test_get_or_create_guarantee_account_for_audio(self):
-        ia = IgetAccountManager(
-        ).get_or_create_guarantee_account_for_android()
-        ii = IgetAccountManager(
-        ).get_or_create_guarantee_account_for_ios()
-        self.assertEquals(ia.account_number, '530401999999999')
-        self.assertEquals(ii.account_number, '530402999999999')
+    def test_balance(self):
+        self.assertEquals(self.buyer.balance, D('0.00'))
+        self.assertEquals(self.seller.balance, D('0.00'))
+        self.buyer.balance = D('10.00')
+        self.buyer.save()
+        self.assertEquals(self.buyer.balance, D('10.00'))
 
-        quantity = Account.objects.get(
-            account_number='53999999999').sub_account_quantity
+    def test_transfer(self):
+        self.buyer.balance = D('10.00')
+        self.buyer.save()
+        self.assertEquals(self.buyer.balance, D('10.00'))
 
-        self.assertEquals(quantity, 2)
+        Transfer.objects.create_transfer(
+            self.buyer, self.seller, D('5.00'), self.buyer)
 
-    def test_get_or_create_income_account_for_audio(self):
-        ia = IgetAccountManager(
-        ).get_or_create_income_account_for_android()
-        ii = IgetAccountManager(
-        ).get_or_create_income_account_for_ios()
-        self.assertEquals(ia.account_number, '540401999999999')
-        self.assertEquals(ii.account_number, '540402999999999')
+        self.assertEquals(self.buyer.balance, D('5.00'))
+        self.assertEquals(self.seller.balance, D('5.00'))
 
-        quantity = Account.objects.get(
-            account_number='54999999999').sub_account_quantity
+        t1 = Transaction.objects.get(sub_account=self.buyer)
+        t2 = Transaction.objects.get(sub_account=self.seller)
 
-        self.assertEquals(quantity, 2)
-
-    def test_get_or_create_fronzenfund_account_for_audio(self):
-        ia = IgetAccountManager(
-        ).get_or_create_fronzenfund_account_for_android()
-        ii = IgetAccountManager(
-        ).get_or_create_fronzenfund_account_for_ios()
-        self.assertEquals(ia.account_number, '550401999999999')
-        self.assertEquals(ii.account_number, '550402999999999')
-
-        quantity = Account.objects.get(
-            account_number='55999999999').sub_account_quantity
-
-        self.assertEquals(quantity, 2)
-
-    def test_get_or_create_gift_account_for_audio(self):
-        ia = IgetAccountManager(
-        ).get_or_create_gift_account_for_android()
-        ii = IgetAccountManager(
-        ).get_or_create_gift_account_for_ios()
-        self.assertEquals(ia.account_number, '560401999999999')
-        self.assertEquals(ii.account_number, '560402999999999')
-
-        quantity = Account.objects.get(
-            account_number='56999999999').sub_account_quantity
-
-        self.assertEquals(quantity, 2)
-
-    def test_can_get_buyer_account_for_android(self):
-        IgetAccountManager().get_or_create_buyer_account_for_android(
-            '100010')
-        ba = IgetAccountManager().get_buyer_account_for_android(
-            '100010')
-
-        self.assertEquals(ba.account_number, '100401900100010')
-        self.assertEquals(ba.balance, D('0.000000'))
+        self.assertEquals(t1.amount, D('-5.00'))
+        self.assertEquals(t2.amount, D('5.00'))

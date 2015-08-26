@@ -329,8 +329,8 @@ class TransferManager(models.Manager):
             amount=amount,
             description=description,
             content_object=content_object,
-            source_balance=D('0.000000'),
-            destination_balance=D('0.000000'),
+            source_balance=source.balance,
+            destination_balance=destination.balance,
         )
         transfer.transactions.create(sub_account=source, amount=-amount)
         transfer.transactions.create(sub_account=destination, amount=amount)
