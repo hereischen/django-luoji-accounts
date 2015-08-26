@@ -39,7 +39,7 @@ class AccountsTestCase(TestCase):
 
 
 class TransferTestCase(TestCase):
-    fixtures = ['accounts.json']
+    fixtures = ['account_details.json']
 
     def setUp(self):
         self.buyer = GeneralAccountManager().get_or_create_sub_account(
