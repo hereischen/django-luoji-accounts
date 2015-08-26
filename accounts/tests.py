@@ -7,7 +7,7 @@ from decimal import Decimal as D
 
 
 class AccountsTestCase(TestCase):
-    fixtures = ['accounts.json']
+    fixtures = ['account_details.json']
 
     def test_create_and_get_sub_account(self):
         # 大平台买家人民币全设备子账户
