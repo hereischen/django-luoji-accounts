@@ -51,7 +51,20 @@ urlpatterns = patterns(
 )
 ```
 
-To customise for your specific usage, create a wrapper in one apps of your project, for example, your_app/account_wrapper.py, it would be:
+if you would like to use GeneralAccountManager directly, you could use:
+
+```python
+from accounts.models import GeneralAccountManager
+
+# query or create an android buyer account 查询或创建安卓买家
+# return one if it exists
+# create and return one if it does not exist
+ba = GeneralAccountManager().get_or_create_sub_account(
+    '12345678','account_type', 'sys_code', 'device_type','currency')
+```
+
+
+Or, to customise for your specific usage, create a wrapper in one apps of your project, for example, your_app/account_wrapper.py, it would be:
 
 ```python
 from accounts.models import GeneralAccountManager
@@ -127,7 +140,6 @@ ga2 = AudioAccountManager().get_cost_account_for_android()
 
 
 ```
-
 That's it!
 
 Notes
